@@ -41,7 +41,7 @@ namespace eCom.Services.CouponAPI.Controllers
 		}
 
 		[HttpGet]
-		[Route("{id}:int")]
+		[Route("{id:int}")]
 		public ResponseDTO Get(int id)
 		{
 			try
@@ -113,6 +113,7 @@ namespace eCom.Services.CouponAPI.Controllers
 		}
 
 		[HttpDelete]
+		[Route("{id:int}")]
 		public ResponseDTO Delete(int id)
 		{
 			try
