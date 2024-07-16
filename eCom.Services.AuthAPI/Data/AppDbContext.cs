@@ -1,11 +1,12 @@
 ﻿
+using eCom.Services.AuthAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace eCom.Services.AuthAPI.Data
 {
-	public class AppDbContext : IdentityDbContext<IdentityUser>
+	public class AppDbContext : IdentityDbContext<ApplicationUser>
 	{
 		public AppDbContext(DbContextOptions<AppDbContext> options) : base() { }
 
@@ -14,7 +15,9 @@ namespace eCom.Services.AuthAPI.Data
 		//	base.OnModelCreating(modelBuilder);
 		//}
 
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			if (!optionsBuilder.IsConfigured)
 			{
