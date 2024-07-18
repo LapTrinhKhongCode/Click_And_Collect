@@ -10,15 +10,17 @@ namespace eCom.Web.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly ITokenProvider _tokenProvider;
+        public AuthController(IAuthService authService, ITokenProvider tokenProvider)
         {
             _authService = authService;
+            _tokenProvider = tokenProvider;
         }
 
         [HttpGet]
         public IActionResult Login()
         {
-            LoginRequestDTO loginRequestDTO = new();    
+            LoginRequestDTO loginRequestDTO = new();
             return View(loginRequestDTO);
         }
 
@@ -29,12 +31,17 @@ namespace eCom.Web.Controllers
 
             if (responseDTO != null && responseDTO.IsSuccess)
             {
-                LoginResponseDTO loginResponseDTO = JsonConvert.
-                    DeserializeObject<LoginResponseDTO>(Convert.ToString(responseDTO.Result));
+
+                LoginResponseDTO loginResponseDTO = JsonConvert.DeserializeObject<LoginResponseDTO>(Convert.ToString(responseDTO.Result));
+                _tokenProvider.SetToken(loginResponseDTO.Token);
+
+
                 TempData["success"] = "Login Successful";
-                return RedirectToAction("Index", "Home");   
+
+                return RedirectToAction("Index", "Home");
             }
-            else {
+            else
+            {
                 ModelState.AddModelError("CustomError", responseDTO.Message);
                 return View(loginRequestDTO);
             }
@@ -60,7 +67,7 @@ namespace eCom.Web.Controllers
             ResponseDTO result = await _authService.RegisterAsync(registrationRequestDTO);
             ResponseDTO assignRole;
 
-            if (result!=null && result.IsSuccess)
+            if (result != null && result.IsSuccess)
             {
                 if (string.IsNullOrEmpty(registrationRequestDTO.Role))
                 {
@@ -68,7 +75,8 @@ namespace eCom.Web.Controllers
 
                 }
                 assignRole = await _authService.AssignRoleAsync(registrationRequestDTO);
-                if (assignRole!=null && assignRole.IsSuccess) {
+                if (assignRole != null && assignRole.IsSuccess)
+                {
                     TempData["success"] = "Registration Successful";
                     return RedirectToAction(nameof(Login));
                 }
