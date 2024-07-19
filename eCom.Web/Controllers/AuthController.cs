@@ -118,8 +118,12 @@ namespace eCom.Web.Controllers
                 jwt.Claims.FirstOrDefault(temp => temp.Type == JwtRegisteredClaimNames.Sub).Value));
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name,
                 jwt.Claims.FirstOrDefault(temp => temp.Type == JwtRegisteredClaimNames.Name).Value));
-            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name,
+
+            identity.AddClaim(new Claim(ClaimTypes.Name,
                 jwt.Claims.FirstOrDefault(temp => temp.Type == JwtRegisteredClaimNames.Email).Value));
+            identity.AddClaim(new Claim(ClaimTypes.Role,
+                jwt.Claims.FirstOrDefault(temp => temp.Type == "role").Value));
+
 
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
