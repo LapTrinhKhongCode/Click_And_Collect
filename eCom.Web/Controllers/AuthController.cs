@@ -46,8 +46,8 @@ namespace eCom.Web.Controllers
             }
             else
             {
-                ModelState.AddModelError("CustomError", responseDTO.Message);
-                return View(loginRequestDTO);
+				TempData["error"] = responseDTO.Message;
+				return View(loginRequestDTO);
             }
 
         }
@@ -84,7 +84,10 @@ namespace eCom.Web.Controllers
                     TempData["success"] = "Registration Successful";
                     return RedirectToAction(nameof(Login));
                 }
-            }
+            }else
+            {
+				TempData["error"] = result.Message;
+			}
 
 
             var roleList = new List<SelectListItem>()
