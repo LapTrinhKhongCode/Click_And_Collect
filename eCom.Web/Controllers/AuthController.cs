@@ -1,9 +1,13 @@
 ﻿using eCom.Web.Models;
 using eCom.Web.Service.IService;
 using eCom.Web.Utility;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace eCom.Web.Controllers
 {
@@ -35,7 +39,7 @@ namespace eCom.Web.Controllers
                 LoginResponseDTO loginResponseDTO = JsonConvert.DeserializeObject<LoginResponseDTO>(Convert.ToString(responseDTO.Result));
                 _tokenProvider.SetToken(loginResponseDTO.Token);
 
-
+                await SignInUser(loginResponseDTO);
                 TempData["success"] = "Login Successful";
 
                 return RedirectToAction("Index", "Home");
@@ -98,5 +102,26 @@ namespace eCom.Web.Controllers
         {
             return View();
         }
+
+        private async Task SignInUser(LoginResponseDTO loginResponseDTO)
+        {
+            var handle = new JwtSecurityTokenHandler();
+            var jwt = handle.ReadJwtToken(loginResponseDTO.Token);
+
+            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Email,
+                jwt.Claims.FirstOrDefault(temp => temp.Type == JwtRegisteredClaimNames.Email).Value));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub,
+                jwt.Claims.FirstOrDefault(temp => temp.Type == JwtRegisteredClaimNames.Sub).Value));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name,
+                jwt.Claims.FirstOrDefault(temp => temp.Type == JwtRegisteredClaimNames.Name).Value));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name,
+                jwt.Claims.FirstOrDefault(temp => temp.Type == JwtRegisteredClaimNames.Email).Value));
+
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+        }
+
     }
 }

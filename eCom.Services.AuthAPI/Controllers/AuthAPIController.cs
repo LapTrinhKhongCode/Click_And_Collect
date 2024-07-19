@@ -33,7 +33,7 @@ namespace eCom.Services.AuthAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]LoginRequestDTO loginRequestDTO)
         {
-            var loginResponse = await _authService.Login(loginRequestDTO);
+            LoginResponseDTO loginResponse = await _authService.Login(loginRequestDTO);
             if(loginResponse.User == null) { 
                 _response.IsSuccess=false;
                 _response.Message = "Username or password is incorrect";
