@@ -98,9 +98,12 @@ namespace eCom.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            return View();
+            await HttpContext.SignOutAsync();
+            _tokenProvider.ClearToken();
+            //TempData["success"] = "Logout Successful";
+            return RedirectToAction("Index","Home");
         }
 
         private async Task SignInUser(LoginResponseDTO loginResponseDTO)
