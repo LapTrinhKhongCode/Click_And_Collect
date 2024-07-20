@@ -1,6 +1,7 @@
 using AutoMapper;
 using eCom.Services.CouponAPI;
 using eCom.Services.CouponAPI.Data;
+using eCom.Services.CouponAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
@@ -47,34 +48,11 @@ builder.Services.AddSwaggerGen(options =>
 	});
 });
 
-var secret = builder.Configuration.GetValue<string>("ApiSettings:Secret");
-var issuer = builder.Configuration.GetValue<string>("ApiSettings:Issuer");
-var audience = builder.Configuration.GetValue<string>("ApiSettings:Audience");
-
-var key = Encoding.ASCII.GetBytes(secret);
-
-builder.Services.AddAuthentication(temp =>
-{
-	 temp.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-	 temp.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-}).AddJwtBearer(temp =>
-{
-	temp.TokenValidationParameters = new TokenValidationParameters
-	{
-		ValidateIssuerSigningKey = true,	
-		IssuerSigningKey = new SymmetricSecurityKey(key),
-		ValidateIssuer = true,
-		ValidIssuer = issuer,
-		ValidAudience = audience,
-		ValidateAudience = true
-	};
-});
 
 
+builder.AddAppAuthentication();
 
-
-
+builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -85,7 +63,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
+app.UseAuthentication();	
 app.UseAuthorization();
 
 app.MapControllers();
