@@ -2,6 +2,7 @@
 using eCom.Services.CouponAPI.Data;
 using eCom.Services.CouponAPI.Models;
 using eCom.Services.CouponAPI.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ namespace eCom.Services.CouponAPI.Controllers
 {
 	[Route("api/coupon")]
 	[ApiController]
+	[Authorize]
 	public class CouponAPIController : ControllerBase
 	{
 		private readonly AppDbContext _db; 

@@ -30,7 +30,7 @@ namespace eCom.Web.Service
                 ApiType = ApiType.POST,
                 Data = loginRequestDTO,
                 Url = SD.AuthAPIBase + "/api/auth/login"
-            });
+            }, withBear: false);
         }
 
         public async Task<ResponseDTO?> RegisterAsync(RegistrationRequestDTO registrationRequestDTO)
@@ -39,7 +39,7 @@ namespace eCom.Web.Service
                 ApiType = ApiType.POST, 
                 Data = registrationRequestDTO, 
                 Url = SD.AuthAPIBase + "/api/auth/register" 
-            });
+            }, withBear: false);
         }
     }
 }

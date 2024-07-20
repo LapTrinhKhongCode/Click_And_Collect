@@ -1,5 +1,6 @@
 ﻿using eCom.Services.AuthAPI.Models.DTO;
 using eCom.Services.AuthAPI.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -8,6 +9,7 @@ namespace eCom.Services.AuthAPI.Controllers
 {
     [Route("api/auth")]
     [ApiController]
+    
     public class AuthAPIController : ControllerBase
     {
         private readonly IAuthService _authService;
