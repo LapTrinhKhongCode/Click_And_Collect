@@ -64,9 +64,9 @@ namespace eCom.Web.Controllers
 		{
 			return View();
 		}
-		public async Task<IActionResult> ProductDelete(int id)
+		public async Task<IActionResult> ProductDelete(int productId)
 		{
-			ResponseDTO? response = await _productService.GetProductByIdAsync(id);
+			ResponseDTO? response = await _productService.GetProductByIdAsync(productId);
 			if (response != null && response.IsSuccess)
 			{
 				ProductDTO? productDTO = JsonConvert.DeserializeObject<ProductDTO>(Convert.ToString(response.Result));
