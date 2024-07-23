@@ -10,6 +10,7 @@ namespace eCom.Services.ProductAPI.Controllers
 {
 	[Route("api/product")]
 	[ApiController]
+	[Authorize]
 	public class ProductAPIController : ControllerBase
 	{
 
@@ -74,7 +75,7 @@ namespace eCom.Services.ProductAPI.Controllers
 		//}
 
 		[HttpPost]
-		//[Authorize(Roles = "ADMIN")]
+		[Authorize(Roles = "ADMIN")]
 		public ResponseDTO Post([FromBody] ProductDTO productDTO)
 		{
 			try
@@ -94,7 +95,7 @@ namespace eCom.Services.ProductAPI.Controllers
 		}
 
 		[HttpPut]
-		//[Authorize(Roles = "ADMIN")]
+		[Authorize(Roles = "ADMIN")]
 		public ResponseDTO Put([FromBody] ProductDTO productDTO)
 		{
 			try
@@ -115,7 +116,7 @@ namespace eCom.Services.ProductAPI.Controllers
 
 		[HttpDelete]
 		[Route("{id:int}")]
-		//[Authorize(Roles = "ADMIN")]
+		[Authorize(Roles = "ADMIN")]
 		public ResponseDTO Delete(int id)
 		{
 			try
