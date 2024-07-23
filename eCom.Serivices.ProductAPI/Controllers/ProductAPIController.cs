@@ -10,7 +10,6 @@ namespace eCom.Services.ProductAPI.Controllers
 {
 	[Route("api/product")]
 	[ApiController]
-	[Authorize]
 	public class ProductAPIController : ControllerBase
 	{
 

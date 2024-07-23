@@ -1,21 +1,50 @@
+using eCom.Services.ProductAPI.Models.DTO;
 using eCom.Web.Models;
+using eCom.Web.Service.IService;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Diagnostics;
 
 namespace eCom.Web.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
-
-		public HomeController(ILogger<HomeController> logger)
+		private readonly IProductService _productService;
+		public HomeController(IProductService productService)
 		{
-			_logger = logger;
+			_productService = productService;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			return View();
+			List<ProductDTO?> list = new();
+			ResponseDTO? response = await _productService.GetAllProductAsync();
+			if (response != null && response.IsSuccess)
+			{
+				list = JsonConvert.DeserializeObject<List<ProductDTO>>(Convert.ToString(response.Result));
+			}
+			else
+			{
+				TempData["error"] = response?.Message;
+			}
+
+			return View(list);
+		}
+
+		public async Task<IActionResult> ProductDetails(int productId)
+		{
+			ProductDTO? product = new();
+			ResponseDTO? response = await _productService.GetProductByIdAsync(productId);
+			if (response != null && response.IsSuccess)
+			{
+				product = JsonConvert.DeserializeObject<ProductDTO>(Convert.ToString(response.Result));
+			}
+			else
+			{
+				TempData["error"] = response?.Message;
+			}
+
+			return View(product);
 		}
 
 		public IActionResult Privacy()
