@@ -2,6 +2,7 @@
 using eCom.Services.ShoppingCartAPI.Data;
 using eCom.Services.ShoppingCartAPI.Models;
 using eCom.Services.ShoppingCartAPI.Models.DTO;
+using eCom.Services.ShoppingCartAPI.Service.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,14 +16,79 @@ namespace eCom.Services.ShoppingCartAPI.Controllers
     {
         private ResponseDTO _response;
         private IMapper _mapper;
-        private readonly AppDbContext _appDbContext;    
-
-        public ShoppingCartAPIController(IMapper mapper, AppDbContext appDbContext)
+        private readonly AppDbContext _appDbContext;
+        private readonly IProductService _productService;
+        public ShoppingCartAPIController(IMapper mapper, AppDbContext appDbContext, IProductService productService)
         {
             _response = new ResponseDTO();
             _mapper = mapper;
             _appDbContext = appDbContext;
+            _productService = productService;
         }
+
+        [HttpGet("GetCart/{userId}")]
+        public async Task<ResponseDTO> GetCart(string userId)
+        {
+            try
+            {
+                CartDTO cart = new()
+                {
+                    CartHeader = _mapper.Map<CartHeaderDTO>(_appDbContext.CartHeaders.
+                    First(temp => temp.UserId == userId)),
+
+                };
+                cart.CartDetails = _mapper.Map<IEnumerable<CartDetailsDTO>>(_appDbContext.CartDetails.
+                    Where(temp => temp.CartHeaderId == cart.CartHeader.CartHeaderId));
+                IEnumerable<ProductDTO> productDTOs = await _productService.GetProducts();
+
+                foreach (var item in cart.CartDetails)
+                {
+                    item.Product = productDTOs.FirstOrDefault(temp => temp.ProductId == temp.ProductId);
+                    cart.CartHeader.CartTotal += (item.Count * item.Product.Price);  
+                }
+                _response.Result = cart;
+
+
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message.ToString();
+                _response.IsSuccess = false;
+            }
+            return _response;
+        }
+
+
+
+
+
+        [HttpPost("RemoveCart")]
+        public async Task<ResponseDTO> RemoveCart([FromBody] int cartDetailsId)
+        {
+            try
+            {
+                CartDetails cartDetails = _appDbContext.CartDetails.
+                    First(temp => temp.CartDetailsId == cartDetailsId);
+                int totalCountofCartItem = _appDbContext.CartDetails.
+                    Where(temp => temp.CartHeaderId == cartDetailsId).Count(); 
+                _appDbContext.CartDetails.Remove(cartDetails);
+                if(totalCountofCartItem == 1)
+                {
+                    var cartHeaderToRemove = await _appDbContext.CartHeaders.
+                        FirstOrDefaultAsync(temp => temp.CartHeaderId == cartDetails.CartHeaderId);
+                    _appDbContext.Remove(cartHeaderToRemove);
+                }
+                await _appDbContext.SaveChangesAsync(); 
+                _response.Result = true;
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message.ToString();
+                _response.IsSuccess = false;
+            }
+            return _response;
+        }
+
 
         [HttpPost("CartUpsert")]
         public async Task<ResponseDTO> CartUpsert(CartDTO cartDTO)
@@ -40,7 +106,7 @@ namespace eCom.Services.ShoppingCartAPI.Controllers
                     cartDTO.CartDetails.First().CartHeaderId = cartHeader.CartHeaderId;
                     _appDbContext.CartDetails.Add(_mapper.Map<CartDetails>(cartDTO.CartDetails.First()));
                     await _appDbContext.SaveChangesAsync();
-                }
+                } 
                 else
                 {
                     //if header is not null
