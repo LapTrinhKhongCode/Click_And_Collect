@@ -60,8 +60,6 @@ namespace eCom.Services.ShoppingCartAPI.Controllers
 
                     }
                 }
-
-
             }
             catch (Exception ex)
             {

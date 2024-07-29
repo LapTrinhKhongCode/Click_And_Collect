@@ -20,7 +20,7 @@ namespace eCom.Web.Service
             {
                 ApiType = ApiType.POST,
                 Data = cartDTO,
-                Url = CouponAPIBase + "/api/cart/ApplyCoupon"
+                Url = ShoppingCartAPIBase + "/api/cart/ApplyCoupon"
             });
         }
 
@@ -29,8 +29,10 @@ namespace eCom.Web.Service
             return await _baseService.SendAsync(new RequestDTO()
             {
                 ApiType = ApiType.GET,
-                Url = CouponAPIBase + "/api/cart/GetCart/" + userId
+                Url = ShoppingCartAPIBase + "/api/cart/GetCart/" + userId
             });
+
+
         }
 
         public async Task<ResponseDTO?> RemoveFromCartAsync(int cartDetailsId)
@@ -38,7 +40,7 @@ namespace eCom.Web.Service
             return await _baseService.SendAsync(new RequestDTO()
             {
                 ApiType = ApiType.POST,
-                Url = CouponAPIBase + "/api/cart/RemoveCart/" + cartDetailsId
+                Url = ShoppingCartAPIBase + "/api/cart/RemoveCart/" + cartDetailsId
             });
         }
 
@@ -48,7 +50,7 @@ namespace eCom.Web.Service
             {
                 ApiType = ApiType.POST,
                 Data= cartDTO,
-                Url = CouponAPIBase + "/api/cart/CartUpsert"
+                Url = ShoppingCartAPIBase + "/api/cart/CartUpsert"
             });
         }
     }
