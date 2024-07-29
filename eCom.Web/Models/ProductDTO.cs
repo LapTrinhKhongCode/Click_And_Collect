@@ -1,7 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 
-namespace eCom.Services.ProductAPI.Models.DTO
+namespace eCom.Web.Models
 {
 	public class ProductDTO
 	{

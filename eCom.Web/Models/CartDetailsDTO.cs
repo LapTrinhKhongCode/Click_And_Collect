@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace eCom.Services.ShoppingCartAPI.Models.DTO
+namespace eCom.Web.Models
 {
+
     public class CartDetailsDTO
     {
         public int CartDetailsId { get; set; }
