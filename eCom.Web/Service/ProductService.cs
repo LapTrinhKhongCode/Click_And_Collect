@@ -1,4 +1,4 @@
-﻿using eCom.Services.ProductAPI.Models.DTO;
+﻿
 using eCom.Web.Models;
 using eCom.Web.Service.IService;
 using static eCom.Web.Utility.SD;

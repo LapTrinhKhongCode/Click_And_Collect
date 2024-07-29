@@ -1,5 +1,4 @@
 ﻿
-using eCom.Services.ProductAPI.Models.DTO;
 using eCom.Web.Models;
 using eCom.Web.Service.IService;
 using Microsoft.AspNetCore.Mvc;
