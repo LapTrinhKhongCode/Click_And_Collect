@@ -20,7 +20,50 @@ namespace eCom.Web.Controllers
             return View( await LoadCartDTOBaseOnLoggedInUser());
         }
 
-        public async Task<CartDTO> LoadCartDTOBaseOnLoggedInUser()
+        public async Task<IActionResult> Remove(int cartDetailsId)
+        {
+            var userId = User.Claims.
+                Where(temp => temp.Type == JwtRegisteredClaimNames.Sub)?.
+                FirstOrDefault()?.Value;
+            ResponseDTO? responseDTO = await _cartService.RemoveFromCartAsync(cartDetailsId);
+            if (responseDTO != null && responseDTO.IsSuccess)
+            {
+                TempData["success"] = "Cart updated successfully!";
+                return RedirectToAction(nameof(CartIndex));
+            }
+            return View();
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApplyCoupon(CartDTO cartDTO)
+        {
+            ResponseDTO? responseDTO = await _cartService.ApplyCouponAsync(cartDTO);
+            if (responseDTO != null && responseDTO.IsSuccess)
+            {
+                TempData["success"] = "Coupon applied successfully!";
+                return RedirectToAction(nameof(CartIndex));
+            }
+            return View();
+
+        }
+
+		[HttpPost]
+		public async Task<IActionResult> RemoveCoupon(CartDTO cartDTO)
+		{
+            cartDTO.CartHeader.CouponCode = "";
+			ResponseDTO? responseDTO = await _cartService.ApplyCouponAsync(cartDTO);
+			if (responseDTO != null && responseDTO.IsSuccess)
+			{
+				TempData["success"] = "Coupon applied successfully!";
+				return RedirectToAction(nameof(CartIndex));
+			}
+			return View();
+
+		}
+
+
+		public async Task<CartDTO> LoadCartDTOBaseOnLoggedInUser()
         {
             var userId = User.Claims.
                 Where(temp => temp.Type == JwtRegisteredClaimNames.Sub)?.
@@ -34,10 +77,6 @@ namespace eCom.Web.Controllers
             }
             return new CartDTO();
         }
-
-
-
-
 
     }
 }

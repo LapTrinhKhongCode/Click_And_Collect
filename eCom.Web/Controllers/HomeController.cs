@@ -35,6 +35,7 @@ namespace eCom.Web.Controllers
             return View(list);
         }
 
+        [Authorize]
         public async Task<IActionResult> ProductDetails(int productId)
         {
             ProductDTO? product = new();
@@ -58,9 +59,9 @@ namespace eCom.Web.Controllers
         {
             CartDTO cartDTO = new CartDTO()
             {
-                CartHeader = new CartHeaderDTO()
+                CartHeader = new CartHeaderDTO
                 {
-                    UserId = User.Claims.Where(temp => temp.Type == JwtClaimTypes.Subject)?.First()?.Value
+                    UserId = User.Claims.Where(temp => temp.Type == JwtClaimTypes.Subject)?.FirstOrDefault()?.Value
                 }
             };
 
@@ -70,7 +71,7 @@ namespace eCom.Web.Controllers
                 ProductId = productDTO.ProductId
             };
 
-            List<CartDetailsDTO> cartDetailsDTOs = new List<CartDetailsDTO>()
+            List<CartDetailsDTO> cartDetailsDTOs = new()
             {
                 cartDetails
             };

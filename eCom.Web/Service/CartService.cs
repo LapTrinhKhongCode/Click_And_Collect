@@ -1,6 +1,7 @@
 ﻿
 using eCom.Web.Models;
 using eCom.Web.Service.IService;
+using System.Security.Cryptography.Xml;
 using static eCom.Web.Utility.SD;
 
 namespace eCom.Web.Service
@@ -26,13 +27,14 @@ namespace eCom.Web.Service
 
         public async Task<ResponseDTO?> GetCartByUserIdAsync(string userId)
         {
-            return await _baseService.SendAsync(new RequestDTO()
+
+            var a = await _baseService.SendAsync(new RequestDTO()
             {
                 ApiType = ApiType.GET,
                 Url = ShoppingCartAPIBase + "/api/cart/GetCart/" + userId
             });
 
-
+            return a;
         }
 
         public async Task<ResponseDTO?> RemoveFromCartAsync(int cartDetailsId)
