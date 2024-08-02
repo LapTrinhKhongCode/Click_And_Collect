@@ -41,11 +41,12 @@ namespace eCom.Services.ShoppingCartAPI.Controllers
                 };
                 cart.CartDetails = _mapper.Map<IEnumerable<CartDetailsDTO>>(_appDbContext.CartDetails.
                     Where(temp => temp.CartHeaderId == cart.CartHeader.CartHeaderId));
+
                 IEnumerable<ProductDTO> productDTOs = await _productService.GetProducts();
 
                 foreach (var item in cart.CartDetails)
                 {
-                    item.Product = productDTOs.FirstOrDefault(temp => temp.ProductId == temp.ProductId);
+                    item.Product = productDTOs.FirstOrDefault(temp => temp.ProductId == item.ProductId);
                     cart.CartHeader.CartTotal += (item.Count * item.Product.Price);  
                 }
                 _response.Result = cart;
@@ -137,7 +138,7 @@ namespace eCom.Services.ShoppingCartAPI.Controllers
                     cartDTO.CartDetails.First().CartHeaderId = cartHeader.CartHeaderId;
                     _appDbContext.CartDetails.Add(_mapper.Map<CartDetails>(cartDTO.CartDetails.First()));
                     await _appDbContext.SaveChangesAsync();
-                } 
+                }
                 else
                 {
                     //if header is not null

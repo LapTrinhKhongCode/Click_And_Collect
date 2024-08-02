@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
+﻿
 namespace eCom.Web.Models
 {
 
@@ -7,7 +6,7 @@ namespace eCom.Web.Models
     {
         public int CartDetailsId { get; set; }
         public int CartHeaderId { get; set; }
-        public CartHeaderDTO CartHeader { get; set; }
+        public CartHeaderDTO? CartHeader { get; set; }
         public int ProductId { get; set; }
         public ProductDTO? Product { get; set; }
         public int Count { get; set; }
