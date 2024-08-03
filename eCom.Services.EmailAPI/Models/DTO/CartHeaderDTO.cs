@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace eCom.Web.Models
+namespace eCom.Services.EmailAPI.Models.DTO
 {
     public class CartHeaderDTO
     {

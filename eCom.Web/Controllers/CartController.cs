@@ -51,7 +51,9 @@ namespace eCom.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> EmailCart(CartDTO cartDTO)
 		{
-			ResponseDTO? responseDTO = await _cartService.EmailCart(cartDTO);
+            CartDTO cart = await LoadCartDTOBaseOnLoggedInUser();
+            cart.CartHeader.Email = User.Claims.Where(temp => temp.Type == JwtRegisteredClaimNames.Email)?.FirstOrDefault()?.Value;
+			ResponseDTO? responseDTO = await _cartService.EmailCart(cart);
 			if (responseDTO != null && responseDTO.IsSuccess)
 			{
 				TempData["success"] = "Email will be processed and sent shortly.";
