@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eCom.MessageBus;
 using eCom.Services.ShoppingCartAPI.Data;
 using eCom.Services.ShoppingCartAPI.Models;
 using eCom.Services.ShoppingCartAPI.Models.DTO;
@@ -18,14 +19,19 @@ namespace eCom.Services.ShoppingCartAPI.Controllers
         private IMapper _mapper;
         private readonly AppDbContext _appDbContext;
         private readonly IProductService _productService;
+        private readonly IMessageBus _messageBus;
+        private readonly IConfiguration _configuration;
         private readonly ICouponService _couponService;
-        public ShoppingCartAPIController(IMapper mapper, AppDbContext appDbContext, IProductService productService, ICouponService couponService)
+        public ShoppingCartAPIController(IMapper mapper, AppDbContext appDbContext, IProductService productService,
+            ICouponService couponService, IMessageBus messageBus, IConfiguration configuration)
         {
             _response = new ResponseDTO();
             _mapper = mapper;
             _appDbContext = appDbContext;
             _productService = productService;
             _couponService = couponService;
+            _messageBus = messageBus;
+            _configuration = configuration;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -120,7 +126,22 @@ namespace eCom.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-       
+        [HttpPost("EmailCartRequest")]
+        public async Task<ResponseDTO> EmailCartRequest([FromBody] CartDTO cartDTO)
+        {
+            try
+            {
+                await _messageBus.PublishMessage(cartDTO,_configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCart"));
+                _response.Result = true;
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message.ToString();
+                _response.IsSuccess = false;
+            }
+            return _response;
+        }
+
 
         [HttpPost("CartUpsert")]
         public async Task<ResponseDTO> CartUpsert(CartDTO cartDTO)

@@ -25,6 +25,16 @@ namespace eCom.Web.Service
             });
         }
 
+        public async Task<ResponseDTO?> EmailCart(CartDTO cartDTO)
+        {
+            return await _baseService.SendAsync(new RequestDTO()
+            {
+                ApiType = ApiType.POST,
+                Data = cartDTO,
+                Url = ShoppingCartAPIBase + "/api/cart/EmailCartRequest"
+            });
+        }
+
         public async Task<ResponseDTO?> GetCartByUserIdAsync(string userId)
         {
 

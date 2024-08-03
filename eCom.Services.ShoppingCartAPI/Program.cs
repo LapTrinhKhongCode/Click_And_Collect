@@ -1,5 +1,5 @@
 using AutoMapper;
-
+using eCom.MessageBus;
 using eCom.Services.ShoppingCartAPI;
 using eCom.Services.ShoppingCartAPI.Data;
 using eCom.Services.ShoppingCartAPI.Extensions;
@@ -27,7 +27,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<BackendApiAuthenticationHttpClientHandler>();
 builder.Services.AddScoped<ICouponService, CouponService>();
-
+builder.Services.AddScoped<IMessageBus, MessageBus>();
 builder.Services.AddHttpClient("Product", u => u.BaseAddress =
 new Uri(builder.Configuration["ServiceUrls:ProductAPI"])).AddHttpMessageHandler<BackendApiAuthenticationHttpClientHandler>();
 builder.Services.AddHttpClient("Coupon", u => u.BaseAddress =
