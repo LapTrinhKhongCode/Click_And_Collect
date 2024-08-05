@@ -20,7 +20,14 @@ namespace eCom.Web.Controllers
             return View( await LoadCartDTOBaseOnLoggedInUser());
         }
 
-        public async Task<IActionResult> Remove(int cartDetailsId)
+		[Authorize]
+		public async Task<IActionResult> Checkout()
+		{
+			return View(await LoadCartDTOBaseOnLoggedInUser());
+		}
+
+
+		public async Task<IActionResult> Remove(int cartDetailsId)
         {
             var userId = User.Claims.
                 Where(temp => temp.Type == JwtRegisteredClaimNames.Sub)?.
