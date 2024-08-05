@@ -1,6 +1,6 @@
+using eCom.MessageBus;
 using eCom.Services.AuthAPI.Data;
 using eCom.Services.AuthAPI.Models;
-using eCom.Services.AuthAPI.Models.DTO;
 using eCom.Services.AuthAPI.Service;
 using eCom.Services.AuthAPI.Service.IService;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +21,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddControllers();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IMessageBus, MessageBus>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

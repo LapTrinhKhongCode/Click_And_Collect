@@ -33,6 +33,12 @@ namespace eCom.Services.EmailAPI.Service
 			await LogAndEmail(message.ToString(), cartDTO.CartHeader.Email);
 		}
 
+		public async Task RegisterUserEmailAndLog(string email)
+		{
+			string message = "User Registeration Successful. <br/> Email:" + email;
+			await LogAndEmail(message, "dovanducanh06@gmail.com");
+		}
+
 		private async Task<bool> LogAndEmail(string message, string email)
 		{
 			try

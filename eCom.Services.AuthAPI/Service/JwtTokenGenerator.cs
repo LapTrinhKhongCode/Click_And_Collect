@@ -1,5 +1,4 @@
 ﻿using eCom.Services.AuthAPI.Models;
-using eCom.Services.AuthAPI.Models.DTO;
 using eCom.Services.AuthAPI.Service.IService;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

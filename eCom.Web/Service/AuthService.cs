@@ -35,7 +35,7 @@ namespace eCom.Web.Service
 
         public async Task<ResponseDTO?> RegisterAsync(RegistrationRequestDTO registrationRequestDTO)
         {
-            return await _baseService.SendAsync(new RequestDTO() {
+                return await _baseService.SendAsync(new RequestDTO() {
                 ApiType = ApiType.POST, 
                 Data = registrationRequestDTO, 
                 Url = SD.AuthAPIBase + "/api/auth/register" 

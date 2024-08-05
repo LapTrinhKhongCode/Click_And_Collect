@@ -1,4 +1,5 @@
-﻿using eCom.Services.AuthAPI.Models.DTO;
+﻿using eCom.MessageBus;
+using eCom.Services.AuthAPI.Models.DTO;
 using eCom.Services.AuthAPI.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,9 +14,13 @@ namespace eCom.Services.AuthAPI.Controllers
     public class AuthAPIController : ControllerBase
     {
         private readonly IAuthService _authService;
-        protected ResponseDTO _response;
-        public AuthAPIController(IAuthService authService)
+		private readonly IMessageBus _messageBus;
+        private readonly IConfiguration _configuration;
+		protected ResponseDTO _response;
+        public AuthAPIController(IAuthService authService, IMessageBus messageBus, IConfiguration configuration)
         {
+            _configuration = configuration; 
+            _messageBus = messageBus;
             _authService = authService;
             _response = new ResponseDTO();
         }
@@ -29,7 +34,9 @@ namespace eCom.Services.AuthAPI.Controllers
                 _response.Message = errorMessage;
                 return BadRequest(_response);
             }
-            return Ok(_response);
+			await _messageBus.PublishMessage(registrationRequestDTO.Email,
+                _configuration.GetValue<string>("TopicAndQueueNames:RegisterQueue"));
+			return Ok(_response);
         }
 
         [HttpPost("login")]

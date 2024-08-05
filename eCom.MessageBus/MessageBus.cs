@@ -11,7 +11,7 @@ namespace eCom.MessageBus
 {
     public class MessageBus : IMessageBus
     {
-        private string connectionString = "Endpoint=sb://ecomweb.servicebus.windows.net/;SharedAccessKeyName=RootManager;SharedAccessKey=EhttcQmgUaP8fEYlj8lRTAYRXCn/AxFTr+ASbCIjsb4=;EntityPath=emailshoppingcart";
+        private string connectionString = "Endpoint=sb://ecomweb.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=naXIKTvaPGi/+EtucbGvG+F9NxJquY0Ip+ASbIdGMBM=";
 
         public async Task PublishMessage(object message, string topic_queue_Name)
         {
