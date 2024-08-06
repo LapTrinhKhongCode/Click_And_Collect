@@ -24,6 +24,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Controllers\" />
+	  <ProjectReference Include="..\eCom.MessageBus\eCom.MessageBus.csproj" />
 	</ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace eCom.Services.OrderAPI.Models.DTO
+﻿namespace eCom.Web.Models
 {
     public class OrderHeaderDTO
     {

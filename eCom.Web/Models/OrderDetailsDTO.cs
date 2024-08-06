@@ -1,7 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace eCom.Services.OrderAPI.Models.DTO
+﻿
+namespace eCom.Web.Models
 {
     public class OrderDetailsDTO
     {
