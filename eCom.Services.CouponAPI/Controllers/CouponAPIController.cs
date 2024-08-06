@@ -5,6 +5,7 @@ using eCom.Services.CouponAPI.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace eCom.Services.CouponAPI.Controllers
 {
@@ -86,7 +87,18 @@ namespace eCom.Services.CouponAPI.Controllers
 				_db.Coupons.Add(coupon);
 				_db.SaveChanges();
 
-				_response.Result = coupon;
+                var options = new Stripe.CouponCreateOptions
+                {
+                    AmountOff = (long)(couponDTO.DiscountAmount*100),
+                    Name = couponDTO.CouponCode, 
+					Currency = "usd",
+                    Id = couponDTO.CouponCode,
+                };
+                var service = new Stripe.CouponService();
+                service.Create(options);
+
+
+                _response.Result = coupon;
 			}
 			catch (Exception ex)
 			{
@@ -126,9 +138,10 @@ namespace eCom.Services.CouponAPI.Controllers
 				Coupon coupon = _db.Coupons.First(temp => temp.CouponId == id);
 				_db.Coupons.Remove(coupon);
 				_db.SaveChanges();
+                var service = new Stripe.CouponService();
+                service.Delete(coupon.CouponCode);
 
-				
-			}
+            }
 			catch (Exception ex)
 			{
 				_response.IsSuccess = false;

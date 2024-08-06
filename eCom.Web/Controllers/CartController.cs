@@ -1,6 +1,8 @@
 ﻿using eCom.Web.Models;
 using eCom.Web.Service.IService;
+using eCom.Web.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
@@ -44,7 +46,20 @@ namespace eCom.Web.Controllers
             OrderHeaderDTO orderHeaderDTO = JsonConvert.DeserializeObject<OrderHeaderDTO>(Convert.ToString(response.Result));
             if (response != null && response.IsSuccess)
             {
+                var domain = Request.Scheme + "://" + Request.Host.Value + "/";
 
+                StripeRequestDTO stripeRequestDTO = new()
+                {
+                    ApprovedUrl = domain + "cart/Confirmation?orderId="+ orderHeaderDTO.OrderHeaderId,
+                    CancelUrl = domain +    "cart/checkout",
+                    OrderHeader= orderHeaderDTO
+
+                };
+
+                var stripeResponse = await _orderService.CreateStripeSession(stripeRequestDTO);
+                StripeRequestDTO stripeResponseResult = JsonConvert.DeserializeObject<StripeRequestDTO>(Convert.ToString(stripeResponse.Result));
+                Response.Headers.Add("Location", stripeResponseResult.StripeSessionUrl);
+                return new StatusCodeResult(303);
             }
             return View();
 
@@ -53,6 +68,17 @@ namespace eCom.Web.Controllers
 
         public async Task<IActionResult> Confirmation(int orderId)
         {
+           
+            ResponseDTO? response = await _orderService.ValidateStripeSession(orderId);
+            if (response != null && response.IsSuccess)
+            {
+                OrderHeaderDTO orderHeader = JsonConvert.DeserializeObject<OrderHeaderDTO>(Convert.ToString(response.Result));
+                if (orderHeader.Status == SD.Status_Approved)
+                {
+                    return View(orderId);
+                }
+                
+            }
             return View(orderId);
         }
 
