@@ -7,6 +7,8 @@ using eCom.Services.OrderAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
+using Stripe.Checkout;
 
 namespace eCom.Services.OrderAPI.Controllers
 {
@@ -54,6 +56,55 @@ namespace eCom.Services.OrderAPI.Controllers
             return _response;
         }
 
+        [Authorize]
+        [HttpPost("CreateStripeSession")]
+        public async Task<ResponseDTO> CreateStripeSession([FromBody] StripeRequestDTO stripeRequestDTO)
+        {
+            try
+            {
+               
+                var options = new Stripe.Checkout.SessionCreateOptions
+                {
+                    SuccessUrl = stripeRequestDTO.ApprovedUrl,
+                    CancelUrl = stripeRequestDTO.CancelUrl,
+                    LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(),
+                    Mode = "payment",
+                };
+
+                foreach(var item in stripeRequestDTO.OrderHeader.OrderDetails)
+                {
+                    var sessionLineItem = new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)(item.Price * 100),
+                            Currency = "usd",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = item.ProductName
+                            }
+                        },
+                        Quantity = item.Count
+                    };
+
+
+                    options.LineItems.Add(sessionLineItem);
+                }
+
+                var service = new Stripe.Checkout.SessionService();
+                Session session = service.Create(options);
+                stripeRequestDTO.StripeSessionUrl = session.Url;
+                OrderHeader orderHeader = _appDbContext.OrderHeaders.First(temp => temp.OrderHeaderId == stripeRequestDTO.OrderHeader.OrderHeaderId);
+                _appDbContext.SaveChanges();
+                _response.Result = stripeRequestDTO;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
 
     }
 }

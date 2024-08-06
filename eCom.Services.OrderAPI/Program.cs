@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using eCom.Services.OrderAPI.Data;
 using eCom.Services.OrderAPI.Service.IService;
 using eCom.MessageBus;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,6 +72,7 @@ app.UseSwaggerUI(c =>
         c.RoutePrefix = string.Empty;
     }
 });
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

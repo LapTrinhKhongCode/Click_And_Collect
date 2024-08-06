@@ -51,6 +51,11 @@ namespace eCom.Web.Controllers
 
         }
 
+        public async Task<IActionResult> Confirmation(int orderId)
+        {
+            return View(orderId);
+        }
+
         public async Task<IActionResult> Remove(int cartDetailsId)
         {
             var userId = User.Claims.
