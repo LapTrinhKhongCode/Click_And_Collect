@@ -38,8 +38,9 @@ namespace eCom.Web.Service
         {
             return await _baseService.SendAsync(new RequestDTO()
             {
-                ApiType = ApiType.GET,
-                Url = OrderAPIBase + "/api/order/ValidateStripeSession" + orderHeaderId
+                ApiType = ApiType.POST,
+                Data = orderHeaderId,
+                Url = OrderAPIBase + "/api/order/ValidateStripeSession"
             });
         }
     }

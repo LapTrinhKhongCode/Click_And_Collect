@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eCom.MessageBus;
 using eCom.Services.OrderAPI.Data;
 using eCom.Services.OrderAPI.Models;
 using eCom.Services.OrderAPI.Models.DTO;
@@ -20,13 +21,16 @@ namespace eCom.Services.OrderAPI.Controllers
         private IMapper _mapper;
         private readonly AppDbContext _appDbContext;
         private IProductService _productService;
-
-        public OrderAPIController( IMapper mapper, AppDbContext appDbContext, IProductService productService)
+        private readonly IMessageBus _messageBus;
+        private readonly IConfiguration _configuration;
+        public OrderAPIController( IMapper mapper, AppDbContext appDbContext, IProductService productService, IConfiguration configuration, IMessageBus messageBus)
         {
             _response = new ResponseDTO();
             _mapper = mapper;
             _appDbContext = appDbContext;
             _productService = productService;
+            _configuration = configuration;
+            _messageBus = messageBus;
         }
 
 
@@ -108,6 +112,7 @@ namespace eCom.Services.OrderAPI.Controllers
                 Session session = service.Create(options);
                 stripeRequestDTO.StripeSessionUrl = session.Url;
                 OrderHeader orderHeader = _appDbContext.OrderHeaders.First(temp => temp.OrderHeaderId == stripeRequestDTO.OrderHeader.OrderHeaderId);
+                orderHeader.StripeSessionId = session.Id;
                 _appDbContext.SaveChanges();
                 _response.Result = stripeRequestDTO;
             }
@@ -127,7 +132,7 @@ namespace eCom.Services.OrderAPI.Controllers
             {
                 OrderHeader orderHeader = _appDbContext.OrderHeaders.First(temp => temp.OrderHeaderId == orderHeaderId);
 
-                var service = new Stripe.Checkout.SessionService();
+                var service = new SessionService();
                 Session session = service.Get(orderHeader.StripeSessionId);
 
                 var paymentIntentService = new PaymentIntentService();
@@ -138,6 +143,14 @@ namespace eCom.Services.OrderAPI.Controllers
                     orderHeader.PaymentIntentId = paymentIntent.Id;
                     orderHeader.Status = SD.Status_Approved;
                     _appDbContext.SaveChanges();
+                    RewardsDTO rewardsDTO = new()
+                    {
+                        OrderId = orderHeader.OrderHeaderId,
+                        RewardActivity = Convert.ToInt32(orderHeader.OrderTotal),
+                        UserId = orderHeader.UserId
+                    };
+                    string topicName = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic");
+                    await _messageBus.PublishMessage(rewardsDTO, topicName);
                     _response.Result = _mapper.Map<OrderHeaderDTO>(orderHeader);
                 }
             }

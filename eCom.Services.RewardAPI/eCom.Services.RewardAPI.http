@@ -1,0 +1,6 @@
+@eCom.Services.RewardAPI_HostAddress = http://localhost:5148
+
+GET {{eCom.Services.RewardAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
