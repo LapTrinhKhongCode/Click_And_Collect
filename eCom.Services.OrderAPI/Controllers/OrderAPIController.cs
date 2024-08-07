@@ -8,6 +8,7 @@ using eCom.Services.OrderAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Stripe;
 using Stripe.Checkout;
 
@@ -31,6 +32,51 @@ namespace eCom.Services.OrderAPI.Controllers
             _productService = productService;
             _configuration = configuration;
             _messageBus = messageBus;
+        }
+
+        //[Authorize]
+        [HttpGet("GetAllOrder")]
+        public ResponseDTO? Get(string? userId = "")
+        {
+            try
+            {
+                IEnumerable<OrderHeader> objList;
+                if (User.IsInRole(SD.RoleAdmin))
+                {
+                    objList = _appDbContext.OrderHeaders.Include(x => x.OrderDetails).
+                        OrderByDescending(temp=>temp.OrderHeaderId).ToList();
+                }
+                else
+                {
+                    objList = _appDbContext.OrderHeaders.Include(x => x.OrderDetails).
+                        Where(temp => temp.UserId==userId).
+                        OrderByDescending(temp => temp.OrderHeaderId).ToList();
+                }
+                _response.Result = _mapper.Map<IEnumerable<OrderHeaderDTO>>(objList);
+            }
+            catch(Exception ex) {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
+        [Authorize]
+        [HttpGet("GetOrders/{id:int}")]
+        public ResponseDTO? Get(int id)
+        {
+            try
+            {
+                OrderHeader orderHeader = _appDbContext.OrderHeaders.Include(temp => temp.OrderDetails).
+                    First(temp => temp.OrderHeaderId==id);  
+                _response.Result = _mapper.Map<OrderHeaderDTO>(orderHeader);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
         }
 
 
@@ -160,6 +206,42 @@ namespace eCom.Services.OrderAPI.Controllers
                 _response.Message = ex.Message;
             }
             return _response;
+        }
+
+
+        [Authorize]
+        [HttpPost("UpdateOrderStatus/{orderId:int}")]
+        public async Task<ResponseDTO> UpdateOrderStatus(int orderId, [FromBody] string newStatus)
+        {
+            try
+            {
+                OrderHeader orderHeader = _appDbContext.OrderHeaders.First(temp => temp.OrderHeaderId == orderId);
+                if(orderHeader != null)
+                {
+                    if (newStatus == SD.Status_Cancelled)
+                    {
+                        var options = new RefundCreateOptions
+                        {
+                            Reason = RefundReasons.RequestedByCustomer,
+                            PaymentIntent = orderHeader.PaymentIntentId
+                        };
+                        var service = new RefundService();
+                        Refund refund = service.Create(options);
+                    }
+                    else
+                    {
+                        orderHeader.Status = newStatus;
+                        _appDbContext.SaveChanges();
+                    }
+                }
+            }
+            catch(Exception ex) {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;          
+            }
+            return _response;
+
+            
         }
 
 
