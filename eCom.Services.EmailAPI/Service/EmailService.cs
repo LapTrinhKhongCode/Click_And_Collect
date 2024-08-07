@@ -1,4 +1,5 @@
 ﻿using eCom.Services.EmailAPI.Data;
+using eCom.Services.EmailAPI.Message;
 using eCom.Services.EmailAPI.Models;
 using eCom.Services.EmailAPI.Models.DTO;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +34,13 @@ namespace eCom.Services.EmailAPI.Service
 			await LogAndEmail(message.ToString(), cartDTO.CartHeader.Email);
 		}
 
-		public async Task RegisterUserEmailAndLog(string email)
+        public async Task LogOrderPlaced(RewardsMessage rewardsDTO)
+        {
+            string message = "New Order Placed. <br/> Order ID:" + rewardsDTO.OrderId;
+            await LogAndEmail(message, "dovanducanh06@gmail.com");
+        }
+
+        public async Task RegisterUserEmailAndLog(string email)
 		{
 			string message = "User Registeration Successful. <br/> Email:" + email;
 			await LogAndEmail(message, "dovanducanh06@gmail.com");

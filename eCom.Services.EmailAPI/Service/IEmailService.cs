@@ -1,4 +1,5 @@
-﻿using eCom.Services.EmailAPI.Models.DTO;
+﻿using eCom.Services.EmailAPI.Message;
+using eCom.Services.EmailAPI.Models.DTO;
 
 namespace eCom.Services.EmailAPI.Service
 {
@@ -6,5 +7,6 @@ namespace eCom.Services.EmailAPI.Service
 	{
 		Task EmailCartAndLog(CartDTO cartDTO);
 		Task RegisterUserEmailAndLog(string email);
+		Task LogOrderPlaced(RewardsMessage rewardsDTO);
 	}
 }
