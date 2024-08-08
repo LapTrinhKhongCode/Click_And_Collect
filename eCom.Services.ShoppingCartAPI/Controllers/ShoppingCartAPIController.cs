@@ -53,9 +53,9 @@ namespace eCom.Services.ShoppingCartAPI.Controllers
                 foreach (var item in cart.CartDetails)
                 {
                     item.Product = productDTOs.FirstOrDefault(temp => temp.ProductId == item.ProductId);
-                    cart.CartHeader.CartTotal += (item.Count * item.Product.Price);  
-                }
-                _response.Result = cart;
+					cart.CartHeader.CartTotal += (item.Count * item.Product.Price);
+				}
+				_response.Result = cart;
 
                 if (!string.IsNullOrEmpty(cart.CartHeader.CouponCode))
                 {

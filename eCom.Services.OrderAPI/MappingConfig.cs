@@ -11,7 +11,7 @@ namespace eCom.Services.OrderAPI
 			var mappingConfig = new MapperConfiguration(config =>
 			{
 				config.CreateMap<OrderHeaderDTO, CartHeaderDTO>()
-				.ForMember(dest => dest.CartTotal, u => u.MapFrom(src =>src.OrderTotal)).ReverseMap();
+				.ForMember(dest => dest.CartTotal, u => u.MapFrom(src => src.OrderTotal)).ReverseMap();
 
                 config.CreateMap<CartDetailsDTO, OrderDetailsDTO>()
                 .ForMember(dest => dest.ProductName, u => u.MapFrom(src => src.Product.Name))
