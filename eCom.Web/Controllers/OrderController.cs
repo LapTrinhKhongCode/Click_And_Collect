@@ -25,7 +25,7 @@ namespace eCom.Web.Controllers
         public IActionResult GetAll()
         {
             IEnumerable<OrderHeaderDTO> list;
-            string userId = "7a77af99-fda9-4282-a937-d7d0d5c6bcf1";
+            string userId = "";
             if (!User.IsInRole(SD.RoleAdmin))
             {
                 userId = User.Claims.Where(temp => temp.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
@@ -40,7 +40,8 @@ namespace eCom.Web.Controllers
             {
                 list = new List<OrderHeaderDTO>();  
             }
-            return Json(new { data = list });
+			return Json(new { data = list });
+			
         }
         
     }
