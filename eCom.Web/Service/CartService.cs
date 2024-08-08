@@ -52,7 +52,8 @@ namespace eCom.Web.Service
             return await _baseService.SendAsync(new RequestDTO()
             {
                 ApiType = ApiType.POST,
-                Url = ShoppingCartAPIBase + "/api/cart/RemoveCart/" + cartDetailsId
+                Data = cartDetailsId,
+                Url = ShoppingCartAPIBase + "/api/cart/RemoveCart/"
             });
         }
 
