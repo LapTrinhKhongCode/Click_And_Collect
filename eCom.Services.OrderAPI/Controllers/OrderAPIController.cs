@@ -228,11 +228,9 @@ namespace eCom.Services.OrderAPI.Controllers
                         var service = new RefundService();
                         Refund refund = service.Create(options);
                     }
-                    else
-                    {
                         orderHeader.Status = newStatus;
                         _appDbContext.SaveChanges();
-                    }
+                    
                 }
             }
             catch(Exception ex) {

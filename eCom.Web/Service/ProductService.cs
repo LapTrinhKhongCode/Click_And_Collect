@@ -19,7 +19,8 @@ namespace eCom.Web.Service
 			{
 				ApiType = ApiType.POST,
 				Data = productDTO,
-				Url = ProductAPIBase + "/api/product/"
+				Url = ProductAPIBase + "/api/product/",
+				ContentType = ContentType.MultipartFormData
 			});
 		}
 
@@ -56,7 +57,9 @@ namespace eCom.Web.Service
 			{
 				ApiType = ApiType.PUT,
 				Data = productDTO,
-				Url = ProductAPIBase + "/api/product/"
+				Url = ProductAPIBase + "/api/product/",
+				ContentType = ContentType.MultipartFormData
+
 			});
 		}
 	}
