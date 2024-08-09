@@ -124,12 +124,35 @@ namespace eCom.Services.ProductAPI.Controllers
 
 		[HttpPut]
 		[Authorize(Roles = "ADMIN")]
-		public ResponseDTO Put([FromBody] ProductDTO productDTO)
+		public ResponseDTO Put(ProductDTO productDTO)
 		{
 			try
 			{
 				Product product = _mapper.Map<Product>(productDTO);
-				_db.Products.Update(product);
+                if (productDTO.Image != null)
+                {
+                    if (!string.IsNullOrEmpty(product.ImageLocalPath))
+                    {
+                        var oldFilePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPath);
+                        FileInfo file = new FileInfo(oldFilePathDirectory);
+                        if (file.Exists)
+                        {
+                            file.Delete();
+                        }
+                    }
+
+                    string fileName = product.ProductId + Path.GetExtension(productDTO.Image.FileName);
+                    string filePath = @"wwwroot\ProductImages\" + fileName;
+                    var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+                    using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
+                    {
+                        productDTO.Image.CopyTo(fileStream);
+                    }
+                    var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
+                    product.ImageUrl = baseUrl + "/ProductImages/" + fileName;
+                    product.ImageLocalPath = filePath;
+                }
+                _db.Products.Update(product);
 				_db.SaveChanges();
 
 				_response.Result = product;
@@ -150,7 +173,16 @@ namespace eCom.Services.ProductAPI.Controllers
 			try
 			{
 				Product product = _db.Products.First(temp => temp.ProductId == id);
-				_db.Products.Remove(product);
+                if (!string.IsNullOrEmpty(product.ImageLocalPath))
+                {
+                    var oldFilePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPath);
+                    FileInfo file = new FileInfo(oldFilePathDirectory);
+                    if (file.Exists)
+                    {
+                        file.Delete();
+                    }
+                }
+                _db.Products.Remove(product);
 				_db.SaveChanges();
 
 
