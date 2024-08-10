@@ -2,6 +2,7 @@
 using eCom.Web.Service.IService;
 using eCom.Web.Utility;
 using IdentityModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace eCom.Web.Controllers
             _orderService = orderService;   
         }
 
+        [Authorize]
         public IActionResult OrderIndex()
         {
             return View();
