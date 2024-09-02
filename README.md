@@ -11,13 +11,13 @@ The Click and Collect app offers a quick and convenient shopping experience, whi
 
 ## 🚍 Key Features
 - **User Benefits**:
--**Time-saving:** Users can order in advance and pick up their food when it is ready, no need to wait in line.
--**Convenient:** Users can view the menu, order, and pay with just a few taps on their phone.
+    - Time-saving: Users can order in advance and pick up their food when it is ready, no need to wait in line.
+    - Convenient: Users can view the menu, order, and pay with just a few taps on their phone.
 
 - **Admin Panel**:
-- **Product Management**: Admin has full control over products including adding, editing, deleting products.
-- **Coupon Management**: Admin can activate, create a new coupon in a certain event.
-- **Process Management**: Admin can view order status, can cancel order or mark as completed.
+  - Product Management: Admin has full control over products including adding, editing, deleting products.
+  - Coupon Management: Admin can activate, create a new coupon in a certain event.
+  - Process Management: Admin can view order status, can cancel order or mark as completed.
 
 - **Security**:
   - Secure authentication and user data protection to ensure privacy and safety.
@@ -75,7 +75,7 @@ Update the connection string in each sub project's <sub>appsettings.json</sub> t
 4. Access the application:  
 - Open a web browser and navigate to http://localhost:xxxx to access the Click And Collect website.
 
-To be able to assign permissions to new accounts, go to the Register.cshtml file and remove the 'hidden' attribute of the div tag and the 'disable' attribute of the option tag in 'Role Session'.
+>⚠️ **Note:** To be able to assign permissions to new accounts, go to the Register.cshtml file and remove the 'hidden' attribute of the div tag and the 'disable' attribute of the option tag in 'Role Session'.
 
 ## Video Introduction and Feature Demonstration
 
