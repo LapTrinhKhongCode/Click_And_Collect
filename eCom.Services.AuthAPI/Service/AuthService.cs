@@ -29,7 +29,7 @@ namespace eCom.Services.AuthAPI.Service
 				if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
 				{
 					//create role if it does not exist
-					_roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
+					_roleManager.CreateAsync(new  IdentityRole(roleName)).GetAwaiter().GetResult();
 				}
 				await _userManager.AddToRoleAsync(user, roleName);
 				return true;
@@ -111,5 +111,11 @@ namespace eCom.Services.AuthAPI.Service
 			}
 			return "Error Encountered";
 		}
+
+
+
+
+
+
     }
 }
