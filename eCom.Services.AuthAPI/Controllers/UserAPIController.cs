@@ -15,6 +15,7 @@ namespace eCom.Services.AuthAPI.Controllers
             _userService = userService;
             _response = new ResponseDTO();
         }
+
         [HttpGet]
         public async Task<ResponseDTO> Index()
         {
@@ -29,5 +30,42 @@ namespace eCom.Services.AuthAPI.Controllers
             }
             return _response;
         }
+
+        [HttpGet]
+        [Route("ManageRole/{id}")]
+        public async Task<ResponseDTO> GetRoleByUserId(string id)
+        {
+            try
+            {
+                _response.Result = await _userService.GetRoleByUserId(id);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<ResponseDTO> Delete(string id)
+        {
+            try
+            {
+                _response.Result = await _userService.DeleteUser(id);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
+
+
+
+
     }
 }

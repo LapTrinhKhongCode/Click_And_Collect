@@ -13,6 +13,15 @@ namespace eCom.Web.Service
             _baseService = baseService;
         }
 
+        public async Task<ResponseDTO?> DeleteUserByIdAsync(string id)
+        {
+            return await _baseService.SendAsync(new RequestDTO
+            {
+                ApiType = ApiType.DELETE,
+                Url = AuthAPIBase + "/api/user/" + id
+            });
+        }
+
         public async Task<ResponseDTO?> GetAllUserAsync()
         {
 
@@ -20,6 +29,15 @@ namespace eCom.Web.Service
             {
                 ApiType = ApiType.GET,
                 Url = AuthAPIBase + "/api/user/"    
+            });
+        }
+
+        public async Task<ResponseDTO?> GetRoleByUserIdAsync(string id)
+        {
+            return await _baseService.SendAsync(new RequestDTO
+            {
+                ApiType = ApiType.GET,
+                Url = AuthAPIBase + "/api/user/ManageRole/" + id
             });
         }
     }

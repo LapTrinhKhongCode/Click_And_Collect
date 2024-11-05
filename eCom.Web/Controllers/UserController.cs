@@ -2,6 +2,7 @@
 using eCom.Web.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Data;
 
 namespace eCom.Web.Controllers
 {
@@ -27,5 +28,46 @@ namespace eCom.Web.Controllers
 
             return View(list);
         }
-    }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            ResponseDTO? response = await _userService.DeleteUserByIdAsync(id);
+            if (response != null && response.IsSuccess)
+            {
+				TempData["success"] = "User deleted successfully";
+				return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+            return NotFound();
+        }
+
+        [HttpGet]
+		public async Task<IActionResult> ManageRole()
+		{
+            string userId = Request.Query["userId"].ToString();
+            ResponseDTO? response = await _userService.GetRoleByUserIdAsync(userId);
+
+            if (response != null && response.IsSuccess)
+            {
+                var result = JsonConvert.DeserializeObject<RoleDTO>(Convert.ToString(response.Result));
+                var viewModel = new RoleDTO
+                {
+                    User = result?.User,
+                    RolesList = result?.RolesList
+                };
+                return View(viewModel);
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+
+            return View(new RoleDTO());
+        }
+
+	}
 }

@@ -3,6 +3,7 @@ using eCom.Services.AuthAPI.Models;
 using eCom.Services.AuthAPI.Models.DTO;
 using eCom.Services.AuthAPI.Service.IService;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace eCom.Services.AuthAPI.Service
 {
@@ -18,6 +19,21 @@ namespace eCom.Services.AuthAPI.Service
             _userManager = userManager;
             _roleManager = roleManager;
         }
+
+        public async Task<string> DeleteUser(string id)
+        {
+            ApplicationUser user = await _db.ApplicationUsers.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                return "User not found";
+            }
+
+            _db.ApplicationUsers.Remove(user);
+            await _db.SaveChangesAsync();
+            return "User deleted successfully";
+
+        }
+
         public async Task<List<UserDTO>> GetAllUser()
         {
             var userList = _db.ApplicationUsers.ToList();
@@ -37,6 +53,39 @@ namespace eCom.Services.AuthAPI.Service
                 userDTOList.Add(userDTO);
             }
             return userDTOList;    
+        }
+
+        public async Task<RoleDTO> GetRoleByUserId(string id)
+        {
+            ApplicationUser user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return null; // Handle user not found case
+            }
+            List<string> exsitingUserRoles = (await _userManager.GetRolesAsync(user)).ToList();
+            var model = new RoleDTO()
+            {
+                User = new UserDTO
+                {
+                    ID = user.Id,
+                    Email = user.Email,
+                    Name = user.Name,
+                    PhoneNumber = user.PhoneNumber,
+
+                },
+                RolesList = new List<RoleSelection>()
+            };
+
+            foreach (var role in _roleManager.Roles)
+            {
+                var roleSelection = new RoleSelection()
+                {
+                    RoleName = role.Name ?? string.Empty,
+                    IsSelected = exsitingUserRoles.Any(c => c == role.Name)
+                };
+                model.RolesList.Add(roleSelection);
+            }
+            return model;
         }
     }
 }

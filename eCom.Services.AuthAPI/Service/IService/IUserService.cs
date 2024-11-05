@@ -6,5 +6,8 @@ namespace eCom.Services.AuthAPI.Service.IService
     public interface IUserService
     {
         Task<List<UserDTO>> GetAllUser();
+        Task<RoleDTO> GetRoleByUserId(string id);
+        Task<string> DeleteUser(string id);
+
     }
 }
