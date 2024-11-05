@@ -1,4 +1,6 @@
-﻿namespace eCom.Web.Models
+﻿using eCom.Web.Utility;
+
+namespace eCom.Web.Models
 {
     public class RegistrationRequestDTO
     {
@@ -6,7 +8,6 @@
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public string Password { get; set; }
-        public string? Role { get; set; }
-
+        public string? Role { get; set; } = SD.RoleCustomer;
     }
 }

@@ -4,6 +4,8 @@ using eCom.Services.AuthAPI.Models.DTO;
 using eCom.Services.AuthAPI.Service.IService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System;
 
 namespace eCom.Services.AuthAPI.Service
 {
@@ -18,6 +20,34 @@ namespace eCom.Services.AuthAPI.Service
             _db = applicationDbContext;
             _userManager = userManager;
             _roleManager = roleManager;
+        }
+
+        public async Task<RoleDTO> AssignRole(RoleDTO model)
+        {
+            
+            ApplicationUser user = await _userManager.FindByIdAsync(model.User.ID);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            var oldUserRoles = await _userManager.GetRolesAsync(user);
+            var result = await _userManager.RemoveFromRolesAsync(user, oldUserRoles);
+
+            if (!result.Succeeded)
+            {
+                throw new Exception("Failed to remove old roles");
+            }
+
+            result = await _userManager.AddToRolesAsync(user, model.RolesList
+                .Where(x => x.IsSelected).Select(y => y.RoleName));
+
+            if (!result.Succeeded)
+            {
+                throw new Exception("Failed to assign new roles");
+            }
+
+            return model;
         }
 
         public async Task<string> DeleteUser(string id)

@@ -78,8 +78,9 @@ namespace eCom.Services.AuthAPI.Service
 				Email = registrationRequestDTO.Email,
 				NormalizedEmail = registrationRequestDTO.Email.ToUpper(),
 				Name = registrationRequestDTO.Name,
-				PhoneNumber = registrationRequestDTO.PhoneNumber
-			};
+				PhoneNumber = registrationRequestDTO.PhoneNumber,
+                Role = registrationRequestDTO.Role
+            };
 
 			try
 			{
@@ -94,6 +95,7 @@ namespace eCom.Services.AuthAPI.Service
 						ID = userToReturn.Id,
 						Name = userToReturn.Name,
 						PhoneNumber = userToReturn.PhoneNumber
+
 					};
 
 					return "";

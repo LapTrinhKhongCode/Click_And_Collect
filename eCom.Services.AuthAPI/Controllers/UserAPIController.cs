@@ -47,6 +47,23 @@ namespace eCom.Services.AuthAPI.Controllers
             return _response;
         }
 
+
+        [HttpPost]
+        [Route("ManageRole")]
+        public async Task<ResponseDTO> AssignRole(RoleDTO model)
+        {
+            try
+            {
+                _response.Result = await _userService.AssignRole(model);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
         [HttpDelete]
         [Route("{id}")]
         public async Task<ResponseDTO> Delete(string id)

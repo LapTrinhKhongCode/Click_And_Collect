@@ -7,6 +7,6 @@ namespace eCom.Web.Service.IService
         Task<ResponseDTO?> GetAllUserAsync();
         Task<ResponseDTO?> DeleteUserByIdAsync(string id);
         Task<ResponseDTO?> GetRoleByUserIdAsync(string id);
-
+        Task<ResponseDTO?> AssignRoleAsync(RoleDTO model);
     }
 }

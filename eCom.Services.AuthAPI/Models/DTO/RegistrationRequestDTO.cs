@@ -1,4 +1,6 @@
 ﻿
+using eCom.Services.AuthAPI.Utility;
+
 namespace eCom.Services.AuthAPI.Models.DTO
 {
     public class RegistrationRequestDTO
@@ -11,7 +13,7 @@ namespace eCom.Services.AuthAPI.Models.DTO
         public string PhoneNumber { get; set; }
        
         public string Password { get; set; }
-        public string? Role { get; set; }
+        public string? Role { get; set; } = SD.RoleCustomer;
 
     }
 }

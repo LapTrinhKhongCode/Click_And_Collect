@@ -2,6 +2,7 @@
 using eCom.Web.Service.IService;
 using Newtonsoft.Json;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using static eCom.Web.Utility.SD;
@@ -78,9 +79,7 @@ namespace eCom.Web.Service
 				}
 
 
-
-	
-				HttpResponseMessage? apiResponse = null;
+                HttpResponseMessage? apiResponse = null;
 
 				switch (requestDTO.ApiType)
 				{
@@ -112,7 +111,8 @@ namespace eCom.Web.Service
 					default:
 						var apiContent = await apiResponse.Content.ReadAsStringAsync();
 						var apiResponseDTO = JsonConvert.DeserializeObject<ResponseDTO>(apiContent);
-						return apiResponseDTO;
+                        
+                        return apiResponseDTO;
 				}
 			}
 			catch (Exception ex)

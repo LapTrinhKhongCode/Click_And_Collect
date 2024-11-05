@@ -13,6 +13,16 @@ namespace eCom.Web.Service
             _baseService = baseService;
         }
 
+        public async Task<ResponseDTO?> AssignRoleAsync(RoleDTO model)
+        {
+            return await _baseService.SendAsync(new RequestDTO
+            {
+                ApiType = ApiType.POST,
+                Data = model,
+                Url = AuthAPIBase + "/api/user/ManageRole/"
+            });
+        }
+
         public async Task<ResponseDTO?> DeleteUserByIdAsync(string id)
         {
             return await _baseService.SendAsync(new RequestDTO

@@ -35,7 +35,7 @@
                     @for (int i = 0; i < Model.RolesList.Count; i++)
                     {
                         <div class="form-check m-2">
-                            <input asp-for="@Model.RolesList[i].RoleName" hidden />
+                            <input asp-for="@Model.RolesList[i].RoleName" type="hidden" />
                             <input asp-for="@Model.RolesList[i].IsSelected" class="form-check-input" />
                             <label asp-for="@Model.RolesList[i].IsSelected" class="form-check-label">
                                 @Model.RolesList[i].RoleName
@@ -57,3 +57,21 @@
         </div>
     </div>
 </form>
+<script>
+    const form = document.querySelector('.role-form');
+    form.onsubmit = (e) => { 
+        e.preventDefault();
+    }
+
+	// {
+	// 	"User": {
+	// 		"ID": "6cb64ba4-aafd-47af-86a7-17f811e8a6e2",
+	// 			"Name": null,
+	// 				"Email": null,
+	// 					"PhoneNumber": null,
+	// 						"Role": null
+	// 	},
+	// 	"RolesList": [{ "RoleName": "CUSTOMER", "IsSelected": true }, { "RoleName": "ADMIN", "IsSelected": false }]
+	// }
+
+</script>

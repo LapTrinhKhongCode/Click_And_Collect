@@ -54,20 +54,31 @@ namespace eCom.Web.Controllers
             if (response != null && response.IsSuccess)
             {
                 var result = JsonConvert.DeserializeObject<RoleDTO>(Convert.ToString(response.Result));
-                var viewModel = new RoleDTO
-                {
-                    User = result?.User,
-                    RolesList = result?.RolesList
-                };
-                return View(viewModel);
+                return View(result);
             }
             else
             {
                 TempData["error"] = response?.Message;
             }
 
-            return View(new RoleDTO());
+            return RedirectToAction(nameof(Index)); 
         }
 
-	}
+        [HttpPost]
+        public async Task<IActionResult> ManageRole(RoleDTO model)
+        {
+            ResponseDTO? response = await _userService.AssignRoleAsync(model);
+            if (response != null && response.IsSuccess)
+            {
+                TempData["success"] = "Role updated successfully";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+            return RedirectToAction(nameof(Index));
+        }   
+
+    }
 }

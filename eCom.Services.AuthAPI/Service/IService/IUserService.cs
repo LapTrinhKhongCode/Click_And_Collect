@@ -7,6 +7,7 @@ namespace eCom.Services.AuthAPI.Service.IService
     {
         Task<List<UserDTO>> GetAllUser();
         Task<RoleDTO> GetRoleByUserId(string id);
+        Task<RoleDTO> AssignRole(RoleDTO model);
         Task<string> DeleteUser(string id);
 
     }
