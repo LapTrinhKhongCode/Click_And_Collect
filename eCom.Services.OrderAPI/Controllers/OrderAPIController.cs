@@ -79,6 +79,23 @@ namespace eCom.Services.OrderAPI.Controllers
             return _response;
         }
 
+        [HttpGet("GetOrdersByUserId/{id}")]
+        public ResponseDTO? GetOrdersByUserId(string id)
+        {
+            try
+            {
+                var orderHeaders = _appDbContext.OrderHeaders.Include(temp => temp.OrderDetails)
+                    .Where(temp => temp.UserId == id).ToList();
+                _response.Result = _mapper.Map<IEnumerable<OrderHeaderDTO>>(orderHeaders);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
 
         [Authorize]
         [HttpPost("CreateOrder")]
@@ -193,7 +210,8 @@ namespace eCom.Services.OrderAPI.Controllers
                     {
                         OrderId = orderHeader.OrderHeaderId,
                         RewardActivity = Convert.ToInt32(orderHeader.OrderTotal),
-                        UserId = orderHeader.UserId
+                        UserId = orderHeader.UserId,
+                        Email = orderHeader.Email
                     };
                     string topicName = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic");
                     await _messageBus.PublishMessage(rewardsDTO, topicName);

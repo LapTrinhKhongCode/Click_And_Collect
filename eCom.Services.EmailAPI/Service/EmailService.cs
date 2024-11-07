@@ -2,19 +2,25 @@
 using eCom.Services.EmailAPI.Message;
 using eCom.Services.EmailAPI.Models;
 using eCom.Services.EmailAPI.Models.DTO;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using SendGrid.Helpers.Mail;
+using SendGrid;
 using System.Text;
 
 namespace eCom.Services.EmailAPI.Service
 {
-	public class EmailService : IEmailService
+	public class EmailService : IEmailService, IEmailSender
 	{
 		private DbContextOptions<AppDbContext> _dbOptions;
-
-		public EmailService(DbContextOptions<AppDbContext> dbOptions)
+        private readonly IEmailSender _emailSender;
+        public string SendGridKey { get; set; }
+        public EmailService(DbContextOptions<AppDbContext> dbOptions, IEmailSender emailSender, IConfiguration _configuration)
 		{
 			_dbOptions = dbOptions;
-		}
+            _emailSender = emailSender;
+            SendGridKey = _configuration.GetValue<string>("SendGrid:SecretKey");
+        }
 
 		public async Task EmailCartAndLog(CartDTO cartDTO)
 		{
@@ -37,16 +43,16 @@ namespace eCom.Services.EmailAPI.Service
         public async Task LogOrderPlaced(RewardsMessage rewardsDTO)
         {
             string message = "New Order Placed. <br/> Order ID:" + rewardsDTO.OrderId;
-            await LogAndEmail(message, "dovanducanh06@gmail.com");
+            await LogAndEmail(message, rewardsDTO.Email);
         }
 
         public async Task RegisterUserEmailAndLog(string email)
 		{
 			string message = "User Registeration Successful. <br/> Email:" + email;
-			await LogAndEmail(message, "dovanducanh06@gmail.com");
+			await LogAndEmail(message, email);
 		}
 
-		private async Task<bool> LogAndEmail(string message, string email)
+        private async Task<bool> LogAndEmail(string message, string email)
 		{
 			try
 			{
@@ -57,6 +63,7 @@ namespace eCom.Services.EmailAPI.Service
 					Message = message,
 
 				};
+
 				await using var _db = new AppDbContext(_dbOptions);
 				await _db.EmailLoggers.AddAsync(emailLogger);
 				await _db.SaveChangesAsync();
@@ -66,5 +73,16 @@ namespace eCom.Services.EmailAPI.Service
 				return false;
 			}
 		}
-	}
+
+        public Task SendEmailAsync(string email, string subject, string htmlMessage)
+        {
+            var client = new SendGridClient(SendGridKey);
+            var from_email = new EmailAddress("102220262@sv1.dut.udn.vn", "Click And Collect");
+
+            var to_email = new EmailAddress(email);
+
+            var msg = MailHelper.CreateSingleEmail(from_email, to_email, subject, "", htmlMessage);
+            return client.SendEmailAsync(msg);
+        }
+    }
 }

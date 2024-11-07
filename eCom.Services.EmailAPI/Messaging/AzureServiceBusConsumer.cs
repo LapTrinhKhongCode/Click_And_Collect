@@ -90,12 +90,14 @@ namespace eCom.Services.EmailAPI.Messaging
 
 		private async Task OnUserRegisterRequestReceived(ProcessMessageEventArgs args)
 		{
-			var message = args.Message;
+            //this is the method that will be called when a message is received
+            var message = args.Message;
 			var body = Encoding.UTF8.GetString(message.Body);
 			string email = JsonConvert.DeserializeObject<string>(body);
 			try
 			{
-				await _emailService.RegisterUserEmailAndLog(email);
+                //try to log email and send email
+                await _emailService.RegisterUserEmailAndLog(email);
 				await args.CompleteMessageAsync(args.Message);
 			}
 			catch (Exception ex)

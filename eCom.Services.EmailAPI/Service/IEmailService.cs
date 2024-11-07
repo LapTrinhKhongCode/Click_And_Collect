@@ -8,5 +8,6 @@ namespace eCom.Services.EmailAPI.Service
 		Task EmailCartAndLog(CartDTO cartDTO);
 		Task RegisterUserEmailAndLog(string email);
 		Task LogOrderPlaced(RewardsMessage rewardsDTO);
-	}
+		
+    }
 }
