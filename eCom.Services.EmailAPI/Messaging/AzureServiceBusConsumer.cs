@@ -2,6 +2,7 @@
 using eCom.Services.EmailAPI.Message;
 using eCom.Services.EmailAPI.Models.DTO;
 using eCom.Services.EmailAPI.Service;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -15,14 +16,14 @@ namespace eCom.Services.EmailAPI.Messaging
 
 		private readonly IConfiguration _configuration;
 		private readonly EmailService _emailService;
-		private readonly EmailSender _emailSender;
+		private readonly IEmailSender _emailSender;
         private readonly string orderCreated_Topic;
 		private readonly string orderCreated_Email_Subscription;
         private ServiceBusProcessor _emailCartProcessor;
 		private ServiceBusProcessor _emailOrderPlacedProcessor;
 		private ServiceBusProcessor _registerUserProcessor;
 
-		public AzureServiceBusConsumer(IConfiguration configuration, EmailService emailService, EmailSender emailSender)
+		public AzureServiceBusConsumer(IConfiguration configuration, EmailService emailService, IEmailSender emailSender)
 		{
 			_emailService = emailService;
             _emailSender = emailSender;

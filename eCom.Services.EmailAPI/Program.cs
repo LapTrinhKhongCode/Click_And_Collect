@@ -21,7 +21,7 @@ optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultCon
 
 
 builder.Services.AddSingleton(new EmailService(optionBuilder.Options));
-builder.Services.AddSingleton<EmailSender>(); // Register EmailSender without interface
+//builder.Services.AddSingleton<EmailSender>(); // Register EmailSender without interface
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
 
