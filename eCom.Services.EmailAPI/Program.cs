@@ -3,6 +3,7 @@ using eCom.Services.EmailAPI.Data;
 using eCom.Services.EmailAPI.Extension;
 using eCom.Services.EmailAPI.Messaging;
 using eCom.Services.EmailAPI.Service;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,8 +18,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var optionBuilder = new DbContextOptionsBuilder<AppDbContext>();
 optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-builder.Services.AddSingleton(new EmailService(optionBuilder.Options));
 
+
+builder.Services.AddSingleton(new EmailService(optionBuilder.Options));
+builder.Services.AddSingleton<EmailSender>(); // Register EmailSender without interface
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

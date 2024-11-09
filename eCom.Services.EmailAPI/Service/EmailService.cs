@@ -4,22 +4,19 @@ using eCom.Services.EmailAPI.Models;
 using eCom.Services.EmailAPI.Models.DTO;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using SendGrid.Helpers.Mail;
-using SendGrid;
 using System.Text;
 
 namespace eCom.Services.EmailAPI.Service
 {
-	public class EmailService : IEmailService, IEmailSender
+    public class EmailService : IEmailService
 	{
 		private DbContextOptions<AppDbContext> _dbOptions;
-        private readonly IEmailSender _emailSender;
-        public string SendGridKey { get; set; }
-        public EmailService(DbContextOptions<AppDbContext> dbOptions, IEmailSender emailSender, IConfiguration _configuration)
+
+
+        public EmailService(DbContextOptions<AppDbContext> dbOptions)
 		{
 			_dbOptions = dbOptions;
-            _emailSender = emailSender;
-            SendGridKey = _configuration.GetValue<string>("SendGrid:SecretKey");
+			
         }
 
 		public async Task EmailCartAndLog(CartDTO cartDTO)
@@ -37,19 +34,25 @@ namespace eCom.Services.EmailAPI.Service
 				message.Append("</li>");
 			}
 			message.Append("</ul>");
-			await LogAndEmail(message.ToString(), cartDTO.CartHeader.Email);
+			//await _emailSender.SendEmailAsync(cartDTO.CartHeader.Email, "Information of your cart - Click And Collect", message.ToString());
+
+            await LogAndEmail(message.ToString(), cartDTO.CartHeader.Email);
 		}
 
         public async Task LogOrderPlaced(RewardsMessage rewardsDTO)
         {
             string message = "New Order Placed. <br/> Order ID:" + rewardsDTO.OrderId;
+            //await _emailSender.SendEmailAsync(rewardsDTO.Email, "Information of your order - Click And Collect", message.ToString());
+
             await LogAndEmail(message, rewardsDTO.Email);
         }
 
         public async Task RegisterUserEmailAndLog(string email)
 		{
 			string message = "User Registeration Successful. <br/> Email:" + email;
-			await LogAndEmail(message, email);
+            //await _emailSender.SendEmailAsync(email, "Information of your register - Click And Collect", message.ToString());
+
+            await LogAndEmail(message, email);
 		}
 
         private async Task<bool> LogAndEmail(string message, string email)
@@ -74,15 +77,6 @@ namespace eCom.Services.EmailAPI.Service
 			}
 		}
 
-        public Task SendEmailAsync(string email, string subject, string htmlMessage)
-        {
-            var client = new SendGridClient(SendGridKey);
-            var from_email = new EmailAddress("102220262@sv1.dut.udn.vn", "Click And Collect");
-
-            var to_email = new EmailAddress(email);
-
-            var msg = MailHelper.CreateSingleEmail(from_email, to_email, subject, "", htmlMessage);
-            return client.SendEmailAsync(msg);
-        }
+       
     }
 }

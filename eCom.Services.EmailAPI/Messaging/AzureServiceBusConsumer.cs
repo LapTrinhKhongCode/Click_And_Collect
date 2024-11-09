@@ -15,16 +15,18 @@ namespace eCom.Services.EmailAPI.Messaging
 
 		private readonly IConfiguration _configuration;
 		private readonly EmailService _emailService;
+		private readonly EmailSender _emailSender;
         private readonly string orderCreated_Topic;
 		private readonly string orderCreated_Email_Subscription;
         private ServiceBusProcessor _emailCartProcessor;
 		private ServiceBusProcessor _emailOrderPlacedProcessor;
 		private ServiceBusProcessor _registerUserProcessor;
 
-		public AzureServiceBusConsumer(IConfiguration configuration, EmailService emailService)
+		public AzureServiceBusConsumer(IConfiguration configuration, EmailService emailService, EmailSender emailSender)
 		{
 			_emailService = emailService;
-			_configuration = configuration;
+            _emailSender = emailSender;
+            _configuration = configuration;
 			serviceBusConnectionString = _configuration.GetValue<string>("ServiceBusConnectionString");
 			emailCartQueue = _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCartQueue");
 			registerUserQueue = _configuration.GetValue<string>("TopicAndQueueNames:RegisterQueue");
@@ -79,7 +81,8 @@ namespace eCom.Services.EmailAPI.Messaging
 			CartDTO objMessage = JsonConvert.DeserializeObject<CartDTO>(body);
 			try
 			{
-				await _emailService.EmailCartAndLog(objMessage);	
+				await _emailSender.SendEmailAsync(objMessage.CartHeader.Email, "Information of your cart - Click And Collect", objMessage.ToString());
+                await _emailService.EmailCartAndLog(objMessage);	
 				await args.CompleteMessageAsync(args.Message);
 			}catch (Exception ex)
 			{
@@ -97,6 +100,7 @@ namespace eCom.Services.EmailAPI.Messaging
 			try
 			{
                 //try to log email and send email
+                await _emailSender.SendEmailAsync(email, "Information of your register - Click And Collect", "Register Successfully");
                 await _emailService.RegisterUserEmailAndLog(email);
 				await args.CompleteMessageAsync(args.Message);
 			}
@@ -113,6 +117,7 @@ namespace eCom.Services.EmailAPI.Messaging
             RewardsMessage objMessage = JsonConvert.DeserializeObject<RewardsMessage>(body);
             try
             {
+                await _emailSender.SendEmailAsync(objMessage.Email, "Information of your register - Click And Collect", objMessage.ToString());
                 await _emailService.LogOrderPlaced(objMessage);
                 await args.CompleteMessageAsync(args.Message);
             }
