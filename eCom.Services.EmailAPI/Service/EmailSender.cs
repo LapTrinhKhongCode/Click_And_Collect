@@ -7,9 +7,9 @@ namespace eCom.Services.EmailAPI.Service
     public class EmailSender : IEmailSender
     {
         public string SendGridKey { get; set; }
-        public EmailSender(IConfiguration _configuration)
+        public EmailSender()
         {
-            SendGridKey = _configuration.GetValue<string>("SendGrid:SecretKey");
+            SendGridKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
         }
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
