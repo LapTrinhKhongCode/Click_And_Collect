@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace eCom.Services.ProductAPI.Extensions
+namespace eCom.Services.RestaurantAPI.Extensions
 {
 	public static class WebApplicationBuilderExtensions
 	{

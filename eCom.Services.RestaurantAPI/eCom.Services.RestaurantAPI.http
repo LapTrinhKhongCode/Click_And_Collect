@@ -1,0 +1,6 @@
+@eCom.Services.RestaurantAPI_HostAddress = http://localhost:5062
+
+GET {{eCom.Services.RestaurantAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
