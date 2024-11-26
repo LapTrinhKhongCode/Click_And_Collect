@@ -43,13 +43,14 @@
                                     <li><a class="dropdown-item" asp-controller="Product" asp-action="ProductIndex">Product</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 </ul>
-                            </li>                            
-                        }
-                        <li class="nav-item">
+                            </li>        
+                             <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Order" asp-action="OrderIndex">
                                 Manage Order
                             </a>
-                        </li>
+                            </li>
+                        }
+                       
                             
 
                     </ul>
@@ -59,7 +60,11 @@
 								&nbsp;<i class="bi bi-cart"></i>&nbsp;
 							</a>
 						</li>
-
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Notifications" asp-action="Index">
+                                &nbsp;<i class="bi bi-bell"></i>&nbsp;
+                            </a>
+                        </li>
                     @if (!User.Identity.IsAuthenticated)
                     {
 
@@ -72,11 +77,16 @@
                     }
                     else
                     {
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Hello, @User.Identity.Name</a>
-                            </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Auth" asp-action="Logout">Logout</a>
+
+                         <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Hello, @User.Identity.Name</a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">My Profile</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Order" asp-action="OrderIndex">Order</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                            <div class="dropdown-divider"></div>
+                             <a class="nav-link" asp-controller="Auth" asp-action="Logout">Logout</a>
+                          </div>
                         </li>
                     }
 

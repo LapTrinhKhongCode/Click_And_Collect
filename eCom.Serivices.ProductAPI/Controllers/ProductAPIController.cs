@@ -185,7 +185,6 @@ namespace eCom.Services.ProductAPI.Controllers
                 _db.Products.Remove(product);
 				_db.SaveChanges();
 
-
 			}
 			catch (Exception ex)
 			{

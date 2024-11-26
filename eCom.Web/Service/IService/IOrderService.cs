@@ -10,7 +10,8 @@ namespace eCom.Web.Service.IService
 		Task<ResponseDTO?> ValidateStripeSession(int orderHeaderId);	
 		Task<ResponseDTO?> GetAllOrder(string? userId);	
 		Task<ResponseDTO?> GetOrder(int orderId);	
-		Task<ResponseDTO?> UpdateOrderStatus(int orderId,string newStatus);	
+		//Task<ResponseDTO?> GetOrderByUserId(string userId);	
+        Task<ResponseDTO?> UpdateOrderStatus(int orderId,string newStatus);	
 		
 	}
 }

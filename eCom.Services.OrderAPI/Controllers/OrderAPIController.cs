@@ -48,11 +48,11 @@ namespace eCom.Services.OrderAPI.Controllers
                 }
                 else
                 {
-                    objList = _appDbContext.OrderHeaders.Include(x => x.OrderDetails).
-                        Where(temp => temp.UserId==userId).
-                        OrderByDescending(temp => temp.OrderHeaderId).ToList();
+                objList = _appDbContext.OrderHeaders.Include(x => x.OrderDetails).
+                    Where(temp => temp.UserId == userId).
+                    OrderByDescending(temp => temp.OrderHeaderId).ToList();
                 }
-                _response.Result = _mapper.Map<IEnumerable<OrderHeaderDTO>>(objList);
+            _response.Result = _mapper.Map<IEnumerable<OrderHeaderDTO>>(objList);
             }
             catch(Exception ex) {
                 _response.IsSuccess = false;
@@ -61,7 +61,7 @@ namespace eCom.Services.OrderAPI.Controllers
             return _response;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetOrders/{id:int}")]
         public ResponseDTO? Get(int id)
         {
@@ -79,22 +79,22 @@ namespace eCom.Services.OrderAPI.Controllers
             return _response;
         }
 
-        [HttpGet("GetOrdersByUserId/{id}")]
-        public ResponseDTO? GetOrdersByUserId(string id)
-        {
-            try
-            {
-                var orderHeaders = _appDbContext.OrderHeaders.Include(temp => temp.OrderDetails)
-                    .Where(temp => temp.UserId == id).ToList();
-                _response.Result = _mapper.Map<IEnumerable<OrderHeaderDTO>>(orderHeaders);
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.Message = ex.Message;
-            }
-            return _response;
-        }
+        //[HttpGet("GetOrdersByUserId/{id}")]
+        //public ResponseDTO? GetOrdersByUserId(string id)
+        //{
+        //    try
+        //    {
+        //        var orderHeaders = _appDbContext.OrderHeaders.Include(temp => temp.OrderDetails)
+        //            .Where(temp => temp.UserId == id).ToList();
+        //        _response.Result = _mapper.Map<IEnumerable<OrderHeaderDTO>>(orderHeaders);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _response.IsSuccess = false;
+        //        _response.Message = ex.Message;
+        //    }
+        //    return _response;
+        //}
 
 
         [Authorize]

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eCom.Services.RestaurantAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/restaurant")]
     [ApiController]
     public class RestaurantAPIController : ControllerBase
     {

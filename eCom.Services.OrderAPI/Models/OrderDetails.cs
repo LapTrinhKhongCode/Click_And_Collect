@@ -16,6 +16,6 @@ namespace eCom.Services.OrderAPI.Models
         public ProductDTO? Product { get; set; }
         public int Count { get; set; }
         public string ProductName { get; set; }
-        public decimal Price { get; set; }
+        public double Price { get; set; }
     }
 }

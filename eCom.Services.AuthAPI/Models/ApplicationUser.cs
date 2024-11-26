@@ -6,6 +6,7 @@ namespace eCom.Services.AuthAPI.Models
     public class ApplicationUser : IdentityUser
     {
         public string Name { get; set; }
+        public int? RestaurantOwnerId { get; set; }
         [NotMapped]
         public string RoleId { get; set; }
         [NotMapped]

@@ -54,6 +54,15 @@ namespace eCom.Web.Service
             });
         }
 
+        //public async Task<ResponseDTO?> GetOrderByUserId(string userId)
+        //{
+        //    return await _baseService.SendAsync(new RequestDTO()
+        //    {
+        //        ApiType = ApiType.GET,
+        //        Url = OrderAPIBase + "/api/order/GetOrders/" + userId
+        //    });
+        //}
+
         public async Task<ResponseDTO?> UpdateOrderStatus(int orderId, string newStatus)
         {
             return await _baseService.SendAsync(new RequestDTO()

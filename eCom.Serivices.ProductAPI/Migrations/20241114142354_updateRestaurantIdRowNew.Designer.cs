@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eCom.Services.ProductAPI.Data;
 
@@ -10,9 +11,11 @@ using eCom.Services.ProductAPI.Data;
 namespace eCom.Services.ProductAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241114142354_updateRestaurantIdRowNew")]
+    partial class updateRestaurantIdRowNew
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,13 +50,7 @@ namespace eCom.Services.ProductAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrderCount")
-                        .HasColumnType("int");
-
                     b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Rating")
                         .HasColumnType("float");
 
                     b.Property<int>("RestaurantId")
@@ -71,9 +68,7 @@ namespace eCom.Services.ProductAPI.Migrations
                             Description = " Quisque vel lacus ac magna, vehicula sagittis ut non lacus.<br/> Vestibulum arcu turpis, maximus malesuada neque. Phasellus commodo cursus pretium.",
                             ImageUrl = "https://placehold.co/603x403",
                             Name = "Samosa",
-                            OrderCount = 0,
                             Price = 15.0,
-                            Rating = 0.0,
                             RestaurantId = 0
                         },
                         new
@@ -83,9 +78,7 @@ namespace eCom.Services.ProductAPI.Migrations
                             Description = " Quisque vel lacus ac magna, vehicula sagittis ut non lacus.<br/> Vestibulum arcu turpis, maximus malesuada neque. Phasellus commodo cursus pretium.",
                             ImageUrl = "https://placehold.co/602x402",
                             Name = "Paneer Tikka",
-                            OrderCount = 0,
                             Price = 13.99,
-                            Rating = 0.0,
                             RestaurantId = 0
                         },
                         new
@@ -95,9 +88,7 @@ namespace eCom.Services.ProductAPI.Migrations
                             Description = " Quisque vel lacus ac magna, vehicula sagittis ut non lacus.<br/> Vestibulum arcu turpis, maximus malesuada neque. Phasellus commodo cursus pretium.",
                             ImageUrl = "https://placehold.co/601x401",
                             Name = "Sweet Pie",
-                            OrderCount = 0,
                             Price = 10.99,
-                            Rating = 0.0,
                             RestaurantId = 0
                         },
                         new
@@ -107,9 +98,7 @@ namespace eCom.Services.ProductAPI.Migrations
                             Description = " Quisque vel lacus ac magna, vehicula sagittis ut non lacus.<br/> Vestibulum arcu turpis, maximus malesuada neque. Phasellus commodo cursus pretium.",
                             ImageUrl = "https://placehold.co/600x400",
                             Name = "Pav Bhaji",
-                            OrderCount = 0,
                             Price = 15.0,
-                            Rating = 0.0,
                             RestaurantId = 0
                         });
                 });

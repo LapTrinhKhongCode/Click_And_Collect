@@ -117,6 +117,44 @@ namespace eCom.Web.Controllers
 			return Json(new { data = list.OrderByDescending(u => u.OrderHeaderId) });
 
 		}
-        
+
+
+        //[HttpGet]
+        //public IActionResult GetOrderByUserId(string status)
+        //{
+        //    IEnumerable<OrderHeaderDTO> list;
+        //    string userId = "";
+        //    if (!User.IsInRole(SD.RoleAdmin))
+        //    {
+        //        userId = User.Claims.Where(temp => temp.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+        //    }
+        //    ResponseDTO response = _orderService.GetOrderByUserId(userId).GetAwaiter().GetResult();
+        //    if (response != null && response.IsSuccess)
+        //    {
+        //        list = JsonConvert.DeserializeObject<List<OrderHeaderDTO>>(Convert.ToString(response.Result));
+        //        switch (status)
+        //        {
+        //            case "approved":
+        //                list = list.Where(u => u.Status == SD.Status_Approved);
+        //                break;
+        //            case "readyforpickup":
+        //                list = list.Where(u => u.Status == SD.Status_ReadyForPickup);
+        //                break;
+        //            case "cancelled":
+        //                list = list.Where(u => u.Status == SD.Status_Cancelled || u.Status == SD.Status_Refunded);
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        list = new List<OrderHeaderDTO>();
+        //    }
+
+        //    return Json(new { data = list.OrderByDescending(u => u.OrderHeaderId) });
+
+        //}
+
     }
 }
